@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import React from "react";
+import InputForm from "../components/InputForm";
 
 const MainScreen = () => {
   return (
@@ -20,6 +21,7 @@ const MainScreen = () => {
       <View style={styles.listView}>
         <Text style={styles.listTitle}>완료된 일</Text>
       </View>
+      <InputForm />
     </SafeAreaView>
   );
 };
