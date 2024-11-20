@@ -3,10 +3,17 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { createStore } from "redux";
-import counter from "./reducers";
+import rootReducer from "./reducers";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
-const store = createStore(counter);
+const store = createStore(rootReducer);
+
+store.dispatch({
+  type: "ADD_TODO",
+  text: "USE REDUX",
+});
+
+console.log("store.getState", store.getState());
 
 const render = () =>
   root.render(
