@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "jsx": "react-jsx", // "react"에서 "react-jsx"로 변경
+    "moduleResolution": "node", // 추가
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "allowJs": true, // 추가
+    "noEmit": true, // 추가
+    "resolveJsonModule": true, // 추가
+    "isolatedModules": true, // 추가
+    "lib": [
+      // 추가
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ]
+  },
+  "include": [
+    // 추가
+    "src"
+  ]
+}
