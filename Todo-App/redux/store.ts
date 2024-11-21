@@ -6,3 +6,5 @@ export const store = configureStore({
     todo: todoReducer,
   },
 });
+
+export type RootState = ReturnType<typeof store.getState>;

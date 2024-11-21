@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface Todo {
+export interface Todo {
   id: number;
   text: string;
   state: string;
@@ -34,7 +34,7 @@ const todoSlice = createSlice({
       state.todos.push(state.todos.splice(item, 1)[0]);
     },
     deleteTodo: (state, action) => {
-      const item = state.todos.findIndex((item) => item.id == action.payload);
+      const item = state.todos.findIndex((item) => item.id === action.payload);
       if (item > -1) {
         state.todos.splice(item, 1);
       }
