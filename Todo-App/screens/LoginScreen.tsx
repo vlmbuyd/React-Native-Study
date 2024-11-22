@@ -7,10 +7,25 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import ListIcon from "../assets/list.svg";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
+import app from "../firebase";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const auth = getAuth(app);
+
+  const handleLogin = async () => {};
+
+  const handleSignUp = async () => {
+    try {
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      console.log("user", user);
+    } catch (error) {
+      if (error instanceof FirebaseError) console.error(error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -32,10 +47,13 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>로그인</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.buttonOutline]}>
+        <TouchableOpacity
+          style={[styles.button, styles.buttonOutline]}
+          onPress={handleSignUp}
+        >
           <Text style={styles.buttonOutlineText}>회원가입</Text>
         </TouchableOpacity>
       </View>
