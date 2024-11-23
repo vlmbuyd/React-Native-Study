@@ -1,4 +1,5 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -10,6 +11,7 @@ import ListIcon from "../assets/list.svg";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import app from "../firebase";
+import Toast from "react-native-toast-message";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -22,8 +24,22 @@ const LoginScreen = () => {
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
       console.log("user", user);
+      Toast.show({
+        type: "success",
+        text1: "회원가입 성공",
+        text2: `${email}으로 가입되었습니다!`,
+      });
     } catch (error) {
-      if (error instanceof FirebaseError) console.error(error.message);
+      if (error instanceof FirebaseError) {
+        console.error(error.message);
+
+        Alert.alert(
+          "회원가입 도중에 문제가 발생했습니다.",
+          error.message,
+          [{ text: "닫기", onPress: () => console.log("닫기") }],
+          { cancelable: true }
+        );
+      }
     }
   };
 
