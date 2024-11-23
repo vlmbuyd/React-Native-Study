@@ -5,6 +5,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
@@ -13,16 +14,40 @@ import TodoItem from "../components/TodoItem";
 import { useSelector } from "react-redux";
 import { Todo } from "../redux/slices/todoSlice";
 import { RootState } from "../redux/store";
+import { getAuth, signOut } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
+import {
+  createComponentForStaticNavigation,
+  useNavigation,
+} from "@react-navigation/native";
+import { LoginScreenNavigationProp } from "../types";
 
 const MainScreen = () => {
   const todos = useSelector((state: RootState) => state.todo.todos);
   const todoTasks = todos.filter((item: Todo) => item.state === "todo");
   const completedTasks = todos.filter((item: Todo) => item.state === "done");
+  const auth = getAuth();
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigation.replace("Login");
+      console.log("로그아웃 되었습니다!");
+    } catch (error) {
+      if (error instanceof FirebaseError) console.log(error.message);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={"default"} />
-      <Text style={styles.pageTitle}>ToDo App</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.pageTitle}>ToDo App</Text>
+        <TouchableOpacity style={styles.logOutButton} onPress={handleLogout}>
+          <Text style={styles.logOutText}>-</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.listView}>
         <Text style={styles.listTitle}>할일</Text>
         {todoTasks.length !== 0 ? (
@@ -90,5 +115,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 20,
     color: "#737373",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  logOutText: {
+    color: "white",
+    fontSize: 25,
+  },
+  logOutButton: {
+    marginBottom: 25,
+    marginRight: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 42,
+    height: 42,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    borderRadius: 4,
   },
 });

@@ -6,24 +6,55 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListIcon from "../assets/list.svg";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import app from "../firebase";
 import Toast from "react-native-toast-message";
+import { useNavigation } from "@react-navigation/native";
+import { LoginScreenNavigationProp } from "../types";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const auth = getAuth(app);
+  const navigation = useNavigation<LoginScreenNavigationProp>();
 
-  const handleLogin = async () => {};
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      console.log("로그인 상태", user);
+      if (user) {
+        navigation.replace("Main");
+      }
+    });
+  }, []);
+
+  const handleLogin = async () => {
+    try {
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      console.log("로그인 성공!", user);
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        Alert.alert(
+          "로그인 도중에 문제가 발생했습니다.",
+          error.message,
+          [{ text: "닫기", onPress: () => console.log("닫기") }],
+          { cancelable: true }
+        );
+      }
+    }
+  };
 
   const handleSignUp = async () => {
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("user", user);
+      console.log("회원가입", user);
       Toast.show({
         type: "success",
         text1: "회원가입 성공",
@@ -31,8 +62,6 @@ const LoginScreen = () => {
       });
     } catch (error) {
       if (error instanceof FirebaseError) {
-        console.error(error.message);
-
         Alert.alert(
           "회원가입 도중에 문제가 발생했습니다.",
           error.message,
