@@ -6,11 +6,13 @@ import {
   Text,
 } from 'react-native';
 import React from 'react';
+import {colors} from '../constants';
 
 interface CustomButtonProps extends PressableProps {
   label: string;
   variant?: 'filled' | 'outlined';
   size?: 'large' | 'medium';
+  inValid?: boolean;
 }
 
 const deviceHeight = Dimensions.get('screen').height;
@@ -19,11 +21,18 @@ export default function CustomButton({
   label,
   variant = 'filled',
   size = 'large',
+  inValid = false,
   ...props
 }: CustomButtonProps) {
   return (
     <Pressable
-      style={[styles.contianer, styles[variant], styles[size]]}
+      disabled={inValid}
+      style={[
+        styles.contianer,
+        styles[variant],
+        styles[size],
+        inValid && styles.inValid,
+      ]}
       {...props}>
       <Text style={[styles.text, styles[`${variant}Text`]]}>{label}</Text>
     </Pressable>
@@ -35,11 +44,14 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     justifyContent: 'center',
   },
+  inValid: {
+    opacity: 0.5,
+  },
   filled: {
-    backgroundColor: '#c63b64',
+    backgroundColor: colors.PINK_700,
   },
   outlined: {
-    borderColor: '#c63b64',
+    borderColor: colors.PINK_700,
     borderWidth: 1,
   },
 
@@ -62,9 +74,9 @@ const styles = StyleSheet.create({
   },
 
   filledText: {
-    color: 'white',
+    color: colors.WHITE,
   },
   outlinedText: {
-    color: '#c63b64',
+    color: colors.PINK_700,
   },
 });
