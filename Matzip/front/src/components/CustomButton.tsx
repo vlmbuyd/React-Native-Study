@@ -1,4 +1,10 @@
-import {Pressable, PressableProps, StyleSheet, Text} from 'react-native';
+import {
+  Dimensions,
+  Pressable,
+  PressableProps,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import React from 'react';
 
 interface CustomButtonProps extends PressableProps {
@@ -6,6 +12,8 @@ interface CustomButtonProps extends PressableProps {
   variant?: 'filled' | 'outlined';
   size?: 'large' | 'medium';
 }
+
+const deviceHeight = Dimensions.get('screen').height;
 
 export default function CustomButton({
   label,
@@ -37,13 +45,13 @@ const styles = StyleSheet.create({
 
   large: {
     width: '100%',
-    paddingVertical: 15,
+    paddingVertical: deviceHeight > 900 ? 15 : 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   medium: {
     width: '50%',
-    paddingVertical: 15,
+    paddingVertical: deviceHeight > 700 ? 12 : 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
