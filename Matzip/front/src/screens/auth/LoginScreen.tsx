@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import InputField from '../../components/InputField';
 import CustomButton from '../../components/CustomButton';
