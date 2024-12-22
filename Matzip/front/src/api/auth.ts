@@ -1,4 +1,3 @@
-import axios from 'axios';
 import axiosInstance from './axios';
 import {Category, Profile} from '../types/domain';
 import {getEncryptStorage} from '../utils';
@@ -54,7 +53,7 @@ const getAccessToken = async (): Promise<ResponseToken> => {
 };
 
 const logout = async () => {
-  await axiosInstance.post('/auth.logout');
+  await axiosInstance.post('/auth/logout');
 };
 
 export {postLogin, postSignup, getProfile, getAccessToken, logout};
