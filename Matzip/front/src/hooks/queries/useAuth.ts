@@ -5,16 +5,13 @@ import {
   logout,
   postLogin,
   postSignup,
-} from '../../api/auth';
-import {
-  UseMutationCustomOptions,
-  UseQueryCustomOptions,
-} from '../../types/common';
-import {removeEncryptStorage, setEncryptStorage} from '../../utils';
-import {removeHeader, setHeader} from '../../utils/header';
+} from '@/api/auth';
+import {UseMutationCustomOptions, UseQueryCustomOptions} from '@/types/common';
+import {removeEncryptStorage, setEncryptStorage} from '@/utils';
+import {removeHeader, setHeader} from '@/utils/header';
 import {useEffect} from 'react';
-import queryClient from '../../api/queryClient';
-import {numbers, queryKeys, storageKeys} from '../../constants';
+import queryClient from '@/api/queryClient';
+import {numbers, queryKeys, storageKeys} from '@/constants';
 
 // mutationOptions를 따로 받아오는 이유
 // 공통 처리 로직은 내부에서 수행하고 onSuccess, onError와 같이 외부에서도 옵션을 커스텀하게 주입하여 확장성 및 재사용성을 높이기 위함
@@ -29,8 +26,8 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
     mutationFn: postLogin,
     onSuccess: ({accessToken, refreshToken}) => {
-      setEncryptStorage(storageKeys.REFRESH_TOKEN, refreshToken);
       setHeader('Authorization', `Bearer ${accessToken}`);
+      setEncryptStorage(storageKeys.REFRESH_TOKEN, refreshToken);
     },
     onSettled: () => {
       // useGetRefreshToken의 자동갱신 로직들(refetchInterval..)도 같이 초기화하기 위해 즉시 리패칭
@@ -99,20 +96,20 @@ function useLogout(mutationOptions?: UseMutationCustomOptions) {
 
 function useAuth() {
   const signupMutation = useSignup();
+  const loginMutation = useLogin();
+  const logoutMutation = useLogout();
+
   const refreshTokenQuery = useGetRefreshToken();
   const getProfileQuery = useGetProfile({enabled: refreshTokenQuery.isSuccess}); // accessToken이 성공적으로 갱신된 경우에만 프로필 요청
 
   const isLogin = getProfileQuery.isSuccess;
 
-  const loginMutation = useLogin();
-  const logoutMutation = useLogout();
-
   return {
     signupMutation,
     loginMutation,
-    isLogin,
-    getProfileQuery,
     logoutMutation,
+    getProfileQuery,
+    isLogin,
   };
 }
 
