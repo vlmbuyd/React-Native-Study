@@ -1,13 +1,15 @@
 import React, {useRef} from 'react';
-import {SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {SafeAreaView, StyleSheet, TextInput, View} from 'react-native';
 import useForm from '../../hooks/useForm';
 import InputField from '../../components/InputField';
 import CustomButton from '../../components/CustomButton';
+import useAuth from '../../hooks/queries/useAuth';
 import {validateSignup} from '../../utils';
 
 function SignupScreen() {
   const passwordRef = useRef<TextInput | null>(null);
   const passwordConfirmRef = useRef<TextInput | null>(null);
+  const {signupMutation, loginMutation} = useAuth();
 
   const signup = useForm({
     initialValues: {email: '', password: '', passwordConfirm: ''},
@@ -15,7 +17,15 @@ function SignupScreen() {
   });
 
   const handleSubmit = () => {
-    console.log('signup.values', signup.values);
+    const {email, password} = signup.values;
+
+    signupMutation.mutate(
+      {email, password},
+      {
+        // 회원가입 성공 시 로그인 요청
+        onSuccess: () => loginMutation.mutate({email, password}),
+      },
+    );
   };
 
   return (
